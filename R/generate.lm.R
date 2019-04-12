@@ -64,7 +64,9 @@ generate.lm <- function(baseline, X=NULL, N=1000, type="none", beta=NULL, xvars=
           XB <- X%*%beta
           survival <- t(sapply(XB, FUN=function(x){baseline$survivor^exp(x)}, simplify=TRUE))
           y <- apply(survival, 1, FUN=function(x){
-               which.max(diff(x < runif(1)))
+               z <- diff(x < runif(1))
+               r <- ifelse(all(z==0), T, which.max(z))
+               return(r)
           })
           data <- data.frame(X)
           data$y <- y
@@ -82,14 +84,16 @@ generate.lm <- function(baseline, X=NULL, N=1000, type="none", beta=NULL, xvars=
           XB <- matrix(X%*%beta, N, T, byrow=TRUE)
           survival <- t(apply(XB, 1, FUN=function(x){baseline$survivor^exp(x)}))
           lifetimes <- apply(survival, 1, FUN=function(x){
-               which.max(diff(x < runif(1)))
+               z <- diff(x < runif(1))
+               r <- ifelse(all(z==0), T, which.max(z))
+               return(r)
           })
-          cen <- lifetimes
-          cen[runif(N) > censor] <- T
+          cen <- quantile(lifetimes, 1-censor) #Step 1: find the 1-censor quantile of the dist. of lifetimes
+          m <- (2*cen + 1)/T #Step 2: set mean of the uniform distribution to this quantile. Anything above the uniform will be censored
           data <- PermAlgo::permalgorithm(N, T, X,
                                           XmatNames = colnames(X),
                                           eventRandom = lifetimes,
-                                          censorRandom = cen,
+                                          censorRandom = round(runif(N, 1, m*T),0),
                                           betas = beta,
                                           groupByD = FALSE)
           data <- dplyr::rename(data, id=Id, failed=Event, start=Start, end=Stop)
@@ -119,7 +123,9 @@ generate.lm <- function(baseline, X=NULL, N=1000, type="none", beta=NULL, xvars=
           }
           survival <- t(apply(XB, 1, FUN=function(x){baseline$survivor^exp(x)}))
           lifetimes <- apply(survival, 1, FUN=function(x){
-               which.max(diff(x < runif(1)))
+               z <- diff(x < runif(1))
+               r <- ifelse(all(z==0), T, which.max(z))
+               return(r)
           })
           data <- data.frame(X)
           data <- dplyr::mutate(data, y = lifetimes)

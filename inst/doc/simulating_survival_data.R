@@ -103,7 +103,7 @@ my.hazard <- function(t){
      }
 
 ## ----myhazsim------------------------------------------------------------
-simdata <- sim.survdata(N=1000, T=100, num.data.frames=1, hazard.fun = my.hazard)
+simdata <- sim.survdata(N=1000, T=1000, num.data.frames=1, hazard.fun = my.hazard)
 
 ## ----myhazplot, fig.align="center", fig.width=6, fig.height=4------------
 survsim.plot(simdata, df=1, type="baseline")

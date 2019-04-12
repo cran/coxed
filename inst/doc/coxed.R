@@ -54,14 +54,14 @@ summary(ed1, stat="mean")
 summary(ed1, stat="median")
 
 ## ----newdataframe--------------------------------------------------------
-new.coalitions <- data.frame(postel = c(1,1,1,0,1),
-                             prevdef = c(0,0,1,1,0),
-                             cont = c(1,0,1,0,1),
-                             ident = c(1,2,2,3,3),
-                             rgovm = c(.3,.8, 1.1,.2,.35),
-                             pgovno = c(2,3,3,2,4),
-                             tpgovno = c(3.2,0,5,0,2.6),
-                             minority = c(0,0,1,0,0))
+new.coalitions <- data.frame(postel = c(1,0,0),
+                             prevdef = c(1,0,1),
+                             cont = c(1,0,0),
+                             ident = c(1,3,2),
+                             rgovm = c(0.81, 0.62, 1.18),
+                             pgovno = c(2,3,4),
+                             tpgovno = c(3.58, 5.17, 10.2),
+                             minority = c(0,0,1))
 new.coalitions
 
 ## ----coxedoutofsample----------------------------------------------------
@@ -69,9 +69,9 @@ forecast <- coxed(mv.cox, newdata=new.coalitions, method="npsf", bootstrap=TRUE,
 forecast$exp.dur
 
 ## ----npsfme--------------------------------------------------------------
-me <- coxed(mv.cox, method="npsf", bootstrap = TRUE, B=30,
-            newdata = mutate(martinvanberg, rgovm=0),
-            newdata2 = mutate(martinvanberg, rgovm=1.24))
+me <- coxed(mv.cox, method = "gam", bootstrap = TRUE, B = 30,
+            newdata = dplyr::mutate(martinvanberg, rgovm = 0),
+            newdata2 = dplyr::mutate(martinvanberg, rgovm = 1.24))
 
 ## ----npsfmesummary-------------------------------------------------------
 summary(me, stat="mean")

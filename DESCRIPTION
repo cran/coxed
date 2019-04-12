@@ -2,7 +2,7 @@ Package: coxed
 Type: Package
 Title: Duration-Based Quantities of Interest for the Cox Proportional
         Hazards Model
-Version: 0.2.0
+Version: 0.2.4
 Depends: R (>= 2.13.0), rms, survival, mgcv
 Authors@R: c(
     person("Kropko,", "Jonathan", email = "jkropko@virginia.edu", role = c("aut", "cre")),
@@ -15,13 +15,13 @@ Encoding: UTF-8
 URL: https://github.com/jkropko/coxed
 LazyData: true
 Imports: PermAlgo, dplyr, tidyr, ggplot2, gridExtra, utils
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2018-08-23 20:42:15 UTC; jk8sd
+Packaged: 2019-04-12 17:29:45 UTC; jk8sd
 Author: Kropko, Jonathan [aut, cre],
   Harden, Jeffrey J. [aut]
 Maintainer: "Kropko, Jonathan" <jkropko@virginia.edu>
 Repository: CRAN
-Date/Publication: 2018-08-23 21:14:25 UTC
+Date/Publication: 2019-04-12 17:52:52 UTC
