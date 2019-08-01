@@ -6,8 +6,8 @@
 Cox proportional hazards model}
 \usage{
 coxed(cox.model, newdata = NULL, newdata2 = NULL, bootstrap = FALSE,
-  method = "npsf", k = -1, ties.method = "random", B = 200,
-  confidence = "studentized", level = 0.95, id = NULL, ...)
+  method = "npsf", k = -1, B = 200, confidence = "studentized",
+  level = 0.95, id = NULL, ...)
 }
 \arguments{
 \item{cox.model}{The output from a Cox proportional hazards model estimated
@@ -34,10 +34,6 @@ the non-parametric step function approach described in Kropko and Harden
 employs the \code{\link[mgcv]{choose.k}} function from the \code{\link{mgcv}} package
 to choose the number of knots}
 
-\item{ties.method}{A character string specifying how ties are treated,
-see ‘Details’ in the documentation for \code{\link[base]{rank}}; can be
-abbreviated}
-
 \item{B}{Number of bootstrap simulation iterations}
 
 \item{confidence}{If "studentized" (the default), bootstrapped CIs
@@ -51,9 +47,11 @@ and acceleration method described by DiCiccio and Efron (1996).}
 .95 for a 95 percent confidence interval)}
 
 \item{id}{Cluster variable if bootstrapping is to be done by clusters of
-observations rather than individual observations. This must be filled in with
-the case ID if the data are coded with time-varying covariates (using the \code{time2}
-argument in the \code{\link[survival]{Surv}} function)}
+observations rather than individual observations. If the data are coded
+with time-varying covariates (using the \code{time2} argument in the
+\code{\link[survival]{Surv}} function), this variable must be the ID variable
+in the \emph{data that are used to estimate the Cox PH model}, and not the ID
+variable in new data.}
 
 \item{...}{Additional arguments to be passed to the \code{\link[coxed]{bootcov2}}
 function, an adaptation of the \code{\link[rms]{bootcov}} function in the

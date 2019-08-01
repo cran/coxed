@@ -1,4 +1,30 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+coxed 0.3.0
+===========
+
+-   edits to help documentation and vignettes in preparation for release
+    to CRAN
+
+coxed 0.2.7
+===========
+
+-   fixed bug with coxed.npsf.tvc() in which all prior time points for
+    every observation were included in the risk set. Changed it so that
+    all yet-to-fail observations are included using ONLY the time point
+    in question
+
+coxed 0.2.6
+===========
+
+-   rewrote rank.predict() to make GAM much faster with out of sample
+    prediction with GAM
+
+coxed 0.2.5
+===========
+
+-   fixed a bug in cox.gam.tvc.R and cox.npsf.tvc.R in which the
+    functions failed to produce out of sample predictions
+
 coxed 0.2.4
 ===========
 
