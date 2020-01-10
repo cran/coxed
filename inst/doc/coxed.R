@@ -1,31 +1,31 @@
-## ----libraries, message=FALSE, warning=FALSE-----------------------------
+## ----libraries, message=FALSE, warning=FALSE----------------------------------
 library(coxed)
 
-## ----libraries2, message=FALSE, warning=FALSE----------------------------
+## ----libraries2, message=FALSE, warning=FALSE---------------------------------
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-## ----coxmodel------------------------------------------------------------
+## ----coxmodel-----------------------------------------------------------------
 mv.surv <- Surv(martinvanberg$formdur, event = rep(1, nrow(martinvanberg)))
 mv.cox <- coxph(mv.surv ~ postel + prevdef + cont + ident + rgovm + pgovno + 
                      tpgovno + minority, method = "breslow", data = martinvanberg)
 summary(mv.cox)
 
-## ----npsf1---------------------------------------------------------------
+## ----npsf1--------------------------------------------------------------------
 ed1 <- coxed(mv.cox, method="npsf")
 
-## ----npsfexpdur----------------------------------------------------------
+## ----npsfexpdur---------------------------------------------------------------
 head(ed1$exp.dur)
 
-## ----sumamrynpsf---------------------------------------------------------
+## ----sumamrynpsf--------------------------------------------------------------
 summary(ed1, stat="mean")
 summary(ed1, stat="median")
 
-## ----baselinefun---------------------------------------------------------
+## ----baselinefun--------------------------------------------------------------
 head(ed1$baseline.functions)
 
-## ----baselineplot, fig.width=6, fig.height=4-----------------------------
+## ----baselineplot, fig.width=6, fig.height=4----------------------------------
 baseline <- gather(ed1$baseline.functions, cbh, survivor, key="survivefunction", value="value")
 ggplot(baseline, aes(x=time, y=value)) +
      geom_line() +
@@ -33,27 +33,27 @@ ggplot(baseline, aes(x=time, y=value)) +
      ylab("Function") +
      facet_wrap( ~ survivefunction, scales = "free")
 
-## ----npsfbs--------------------------------------------------------------
+## ----npsfbs-------------------------------------------------------------------
 ed1 <- coxed(mv.cox, method="npsf", bootstrap = TRUE, B=30)
 
-## ----bsexpdurnpsf--------------------------------------------------------
+## ----bsexpdurnpsf-------------------------------------------------------------
 head(ed1$exp.dur)
 
-## ----npsfsummarybs-------------------------------------------------------
+## ----npsfsummarybs------------------------------------------------------------
 summary(ed1, stat="mean")
 summary(ed1, stat="median")
 
-## ----npsfbs3-------------------------------------------------------------
+## ----npsfbs3------------------------------------------------------------------
 ed1 <- coxed(mv.cox, method="npsf", bootstrap = TRUE, B=30, level=.8)
 summary(ed1, stat="mean")
 summary(ed1, stat="median")
 
-## ----npsfbs4-------------------------------------------------------------
+## ----npsfbs4------------------------------------------------------------------
 ed1 <- coxed(mv.cox, method="npsf", bootstrap = TRUE, B=30, confidence="empirical")
 summary(ed1, stat="mean")
 summary(ed1, stat="median")
 
-## ----newdataframe--------------------------------------------------------
+## ----newdataframe-------------------------------------------------------------
 new.coalitions <- data.frame(postel = c(1,0,0),
                              prevdef = c(1,0,1),
                              cont = c(1,0,0),
@@ -64,57 +64,57 @@ new.coalitions <- data.frame(postel = c(1,0,0),
                              minority = c(0,0,1))
 new.coalitions
 
-## ----coxedoutofsample----------------------------------------------------
+## ----coxedoutofsample---------------------------------------------------------
 forecast <- coxed(mv.cox, newdata=new.coalitions, method="npsf", bootstrap=TRUE, B=30)
 forecast$exp.dur
 
-## ----npsfme--------------------------------------------------------------
+## ----npsfme-------------------------------------------------------------------
 me <- coxed(mv.cox, method = "gam", bootstrap = TRUE, B = 30,
             newdata = dplyr::mutate(martinvanberg, rgovm = 0),
             newdata2 = dplyr::mutate(martinvanberg, rgovm = 1.24))
 
-## ----npsfmesummary-------------------------------------------------------
+## ----npsfmesummary------------------------------------------------------------
 summary(me, stat="mean")
 summary(me, stat="median")
 
-## ----menpsf2-------------------------------------------------------------
+## ----menpsf2------------------------------------------------------------------
 me <- coxed(mv.cox, method="npsf", bootstrap = TRUE, B=30,
             newdata = dplyr::mutate(martinvanberg, pgovno=1),
             newdata2 = dplyr::mutate(martinvanberg, pgovno=6))
 summary(me, stat="mean")
 summary(me, stat="median")
 
-## ----gam-----------------------------------------------------------------
+## ----gam----------------------------------------------------------------------
 ed2 <- coxed(mv.cox, method="gam")
 head(ed2$exp.dur)
 
-## ----gamsummary----------------------------------------------------------
+## ----gamsummary---------------------------------------------------------------
 summary(ed2, stat="mean")
 summary(ed2, stat="median")
 
-## ----coxedoutofsample2---------------------------------------------------
+## ----coxedoutofsample2--------------------------------------------------------
 forecast <- coxed(mv.cox, newdata=new.coalitions, method="gam")
 forecast$exp.dur
 
-## ----gammebs-------------------------------------------------------------
+## ----gammebs------------------------------------------------------------------
 me <- coxed(mv.cox, method="gam",
             newdata = dplyr::mutate(martinvanberg, rgovm=0),
             newdata2 = dplyr::mutate(martinvanberg, rgovm=1.24))
 summary(me, stat="mean")
 summary(me, stat="median")
 
-## ----gammebs2------------------------------------------------------------
+## ----gammebs2-----------------------------------------------------------------
 me <- coxed(mv.cox, method="gam", 
             newdata = dplyr::mutate(martinvanberg, pgovno=1),
             newdata2 = dplyr::mutate(martinvanberg, pgovno=6))
 summary(me, stat="mean")
 summary(me, stat="median")
 
-## ----gammodel------------------------------------------------------------
+## ----gammodel-----------------------------------------------------------------
 summary(ed2$gam.data)
 summary(ed2$gam.model)
 
-## ----gamfit, fig.width=6, fig.height=6, fig.align="center"---------------
+## ----gamfit, fig.width=6, fig.height=6, fig.align="center"--------------------
 ggplot(ed2$gam.data, aes(x=rank.xb, y=y)) +
      geom_point() +
      geom_line(aes(x=rank.xb, y=gam_fit)) +
@@ -122,23 +122,23 @@ ggplot(ed2$gam.data, aes(x=rank.xb, y=y)) +
      xlab("Cox model LP rank (smallest to largest)") +
      ylab("Duration")
 
-## ----tester--------------------------------------------------------------
+## ----tester-------------------------------------------------------------------
 tester <- data.frame(y=martinvanberg$formdur, npsf=ed1$exp.dur$exp.dur, gam=ed2$exp.dur$exp.dur)
 cor(tester)
 
-## ----tester2, fig.width=6, fig.height=6, fig.align="center"--------------
+## ----tester2, fig.width=6, fig.height=6, fig.align="center"-------------------
 pairs(tester)
 
-## ----tvc-----------------------------------------------------------------
+## ----tvc----------------------------------------------------------------------
 bs.surv <- Surv(time = boxsteffensmeier$start, time2 = boxsteffensmeier$te, event = boxsteffensmeier$cut_hi)
 bs.cox <- coxph(bs.surv ~ ec + dem + south + iv, data = boxsteffensmeier, method = "breslow")
 summary(bs.cox)
 
-## ----tvced---------------------------------------------------------------
+## ----tvced--------------------------------------------------------------------
 ed1 <- coxed(bs.cox, method="npsf", id=boxsteffensmeier$caseid)
 summary(ed1, stat="mean")
 
-## ----tvcme---------------------------------------------------------------
+## ----tvcme--------------------------------------------------------------------
 me <- coxed(bs.cox, method="npsf",
             newdata = mutate(boxsteffensmeier, ec=quantile(ec, .25)),
             newdata2 = mutate(boxsteffensmeier, ec=quantile(ec, .75)),
