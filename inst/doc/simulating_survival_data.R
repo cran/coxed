@@ -29,10 +29,6 @@ head(cbind(simdata$xb, simdata$exp.xb))
 ## ----ind1---------------------------------------------------------------------
 simdata$ind.survive[1,]
 
-## ----simsurv10, cache=TRUE----------------------------------------------------
-simdata <- sim.survdata(N=1000, T=100, num.data.frames=2)
-summary(simdata)
-
 ## ----data3--------------------------------------------------------------------
 head(simdata[[2]]$data, 10)
 
